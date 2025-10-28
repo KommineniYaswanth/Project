@@ -1,0 +1,304 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    transition: background 0.3s, color 0.3s;
+    margin-top: 60px; /* Adjust according to the height of your header */
+}
+
+/* Dark Mode */
+.dark-mode {
+    background-color: #121212;
+    color: #f4f4f4;
+}
+
+.dark-mode .container {
+    background: #1e1e1e;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Header Styles */
+.header {
+    width: 100%;
+    background: #007BFF;
+    color: white;
+    padding: 15px 20px; /* Add padding to the header */
+    display: flex;
+    justify-content: space-between; /* This will place title on the left and toggle button on the right */
+    align-items: center; /* Aligns content vertically */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Header Styles */
+.dark-mode .header {
+    background-color: #222;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    text-align: center; /* Ensure text is left aligned */
+    flex-grow: 1; /* This allows the title to grow and take available space */
+}
+
+/* Dark Mode Toggle Button */
+.theme-toggle {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 25px;
+    transition: background 0.3s;
+    width: auto; /* ensures it doesn’t stretch */
+    white-space: nowrap; /* keeps icon and text inline */
+    margin-left: auto; /* pushes it to the right in flex layout */
+}
+
+
+.theme-toggle:hover {
+    background: #555;
+}
+
+
+/* Footer Styles */
+.footer {
+    width: 100%;
+    background: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    font-size: 14px;
+}
+
+/* Main container styling */
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 450px;
+    margin-top: 80px; /* Allow space for header */
+    margin-bottom: 100px; /* Allow space for footer */
+}
+
+/* Input and Button Styling */
+input[type="file"] {
+    margin: 20px 0;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+input[type="file"]:hover {
+    border-color: #007BFF;
+}
+
+/* Styled Button */
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Result page styling */
+.result-container {
+    text-align: center;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    max-width: 700px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.result-container img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.result-container h2 {
+    font-size: 2rem;
+    color: #333;
+}
+
+.confidence {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Button Styling for Result Page */
+.result-container .button {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.result-container .button:hover {
+    background-color: #45a049;
+}
+
+/* Camera Styles */
+.camera-container {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+video {
+    max-width: 100%;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+canvas {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    input[type="file"], button {
+        width: 100%;
+    }
+}
+
+.side-form-section {
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.side-form-section .section-heading {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.side-form-section .form-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.side-form-section form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.side-form-section form h2 {
+    margin-bottom: 15px;
+}
+
+.side-form-section input[type="file"],
+.side-form-section button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+}
+
+.side-form-section .button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.side-form-section video {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.side-form-section .preview img {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Mode specific styles */
+.dark-mode .side-form-section form {
+    background: #1e1e1e;
+    color: white;
+}
+
+.dark-mode .side-form-section input[type="file"],
+.dark-mode .side-form-section button {
+    background: #333;
+    color: white;
+    border: 1px solid #666;
+}
+
+.dark-mode .side-form-section .section-heading {
+    color: white;
+}
+
+.dark-mode .side-form-section .form-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.dark-mode .footer {
+    background: #333;
+}
+
+.dark-mode .footer p {
+    color: #f4f4f4;
+}
+
+.dark-mode .theme-toggle {
+    background: #f4f4f4;
+    color: #121212;
+}
