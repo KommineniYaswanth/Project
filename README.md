@@ -28,8 +28,7 @@ The app detects basic human emotions (Happy, Sad, Angry, etc.) from face images 
 - **Backend:** Python Flask  
 - **AI/ML Model:** TensorFlow / Keras (`Emomodel.h5`)  
 - **Authentication:** Firebase Authentication  
-- **Frontend:** HTML, CSS, JavaScript  
-- **Deployment:** Optional (Heroku, Render, or Vercel)  
+- **Frontend:** HTML, CSS, JavaScript
 
 ---
 
