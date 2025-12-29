@@ -32,29 +32,28 @@ The app detects basic human emotions (Happy, Sad, Angry, etc.) from face images 
 
 ---
 
-## Installation
+## Quick Setup (Linux/Mac)
 
-1. **Clone the repository**
+You can automate the setup with this Bash script:
+
 ```bash
+#!/bin/bash
+
+set -e
+
+echo "Cloning repository..."
 git clone https://github.com/KommineniYaswanth/Project.git
-cd Project
+cd Project || { echo "Failed to enter Project directory"; exit 1; }
 
-##2. **Create & activate a virtual environment**
-
-python -m venv venv
-# Linux/Mac
+echo "Creating virtual environment..."
+python3 -m venv venv
+echo "Activating virtual environment..."
 source venv/bin/activate
-# Windows
-venv\Scripts\activate
 
-3. **Install dependencies**
-
+echo "Installing dependencies..."
+pip install --upgrade pip
 pip install -r requirements.txt
 
-4. **Run the app**
-
+echo "Starting the app..."
+echo "Open your browser at http://127.0.0.1:5000"
 python main.py
-
-5. **Open in browser**
-
-http://127.0.0.1:5000
