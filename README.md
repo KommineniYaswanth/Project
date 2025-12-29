@@ -38,3 +38,23 @@ The app detects basic human emotions (Happy, Sad, Angry, etc.) from face images 
 ```bash
 git clone https://github.com/KommineniYaswanth/Project.git
 cd Project
+
+##2. **Create & activate a virtual environment**
+
+python -m venv venv
+# Linux/Mac
+source venv/bin/activate
+# Windows
+venv\Scripts\activate
+
+3. **Install dependencies**
+
+pip install -r requirements.txt
+
+4. **Run the app**
+
+python main.py
+
+5. **Open in browser**
+
+http://127.0.0.1:5000
