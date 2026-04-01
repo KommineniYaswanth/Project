@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Emotion Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>Emotion Recognition</h1>
+        <div class="header-actions">
+            {% if session.get('user') %}
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 140px; text-align: center;">
+        <h1>Something went wrong</h1>
+        <div class="error">{{ error }}</div>
+        <a href="{{ url_for('upload_file') if 'user' in session else url_for('login') }}" class="button">Go Back</a>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Emotion Recognition System</p>
+    </footer>
+</body>
+</html>

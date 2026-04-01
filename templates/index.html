@@ -3,46 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition - Upload & Capture</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Face Recognition System</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23667eea'/><text x='50' y='62' font-size='62' text-anchor='middle' fill='%23ffffff' font-family='Inter, sans-serif'>E</text></svg>">
 </head>
 <body>
-    <div class="header">
-        <h1>Face Recognition System</h1>
-        <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
-    </div>
+    <header class="header">
+        <h1>Emotion Recognition</h1>
+        <div class="header-actions">
+            {% if session.get('user') %}
+            <span class="user-badge">{{ session.get('user_name', session.get('user')) }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+            {% endif %}
+            <button class="theme-toggle" onclick="toggleTheme()">
+                Dark Mode
+            </button>
+        </div>
+    </header>
 
-    <div class="side-form-section">
-        <h1 class="section-heading">Upload or Capture an Image</h1>
-    
+    <main class="side-form-section">
+        <h1 class="section-heading">Analyze Your Emotions</h1>
+
         <div class="form-row">
             <!-- Upload Form -->
-            <form class="upload-form" action="/" method="post" enctype="multipart/form-data" onsubmit="return validateUploadForm()">
-                <h2>Upload</h2>
-                <input type="file" name="file" id="fileInput" accept="image/*" onchange="showPreview()">
-                <div class="preview" id="uploadPreview"></div> <!-- Preview for uploaded image -->
-                <button type="submit">Upload</button>
-            </form>
-    
-            <!-- Capture Form -->
-            <form class="capture-form" action="/" method="post" onsubmit="return validateCaptureForm()">
-                <h2>Capture</h2>
-                <video id="video" autoplay style="display: none;"></video>
-                <canvas id="canvas" style="display:none;"></canvas>
-                <input type="hidden" name="captured_image" id="capturedImage">
-    
-                <div class="button-row">
-                    <button type="button" id="capture-btn" onclick="startAndCapture()">📸 Capture</button>
-                    <button type="button" id="retake-btn" onclick="retakeImage()" style="display: none;">🔁 Retake</button>
-                    <button type="submit">Submit</button>
-                </div>
-    
-                <div class="preview" id="capturePreview"></div> <!-- Preview for captured image -->
-            </form>
-        </div>
-    </div>        
+            <div class="upload-form">
+                <h2>Upload Image</h2>
+                <form action="/" method="POST" enctype="multipart/form-data" onsubmit="return validateUploadForm()">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="file" name="file" id="fileInput" accept="image/*" onchange="showPreview()">
+                    <div class="preview" id="uploadPreview">
+                        <span>Select an image to preview</span>
+                    </div>
+                    <button type="submit" class="button">Analyze Emotion</button>
+                </form>
+            </div>
 
-    <div class="footer">© 2025 Face Recognition App</div>
+            <!-- Capture Form -->
+            <div class="capture-form">
+                <h2>Live Capture</h2>
+                <form action="/" method="POST" onsubmit="return validateCaptureForm()">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <video id="video" autoplay style="display: none;"></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                    <input type="hidden" name="captured_image" id="capturedImage">
+
+                    <div class="preview" id="capturePreview">
+                        <span>Click capture to start camera</span>
+                    </div>
+
+                    <div class="button-row">
+                        <button type="button" id="capture-btn" class="button" onclick="startAndCapture()">Capture</button>
+                        <button type="button" id="retake-btn" class="button" onclick="retakeImage()" style="display: none;">Retake</button>
+                        <button type="submit" class="button">Analyze Emotion</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Emotion Recognition System. Built by AI Engineering Team</p>
+    </footer>
 
     <script>
         // State to check if the webcam is already enabled
@@ -56,11 +81,13 @@
             // If the camera is already initialized, just show the video stream
             if (!cameraInitialized) {
                 navigator.mediaDevices.getUserMedia({ video: true })
-                    .then((stream) => {
-                        video.srcObject = stream;
+                    .then((mediaStream) => {
+                        video.srcObject = mediaStream;
                         video.style.display = "block";
                         cameraInitialized = true;  // Mark the camera as initialized
-                        stream = stream;  // Store the stream for later cleanup
+                        stream = mediaStream;  // Store the stream for later cleanup
+                        document.getElementById('capturePreview').innerHTML = '';
+                        document.getElementById('capturePreview').appendChild(video);
                     })
                     .catch((err) => {
                         console.error("Camera error:", err);
@@ -79,11 +106,16 @@
             const preview = document.getElementById("capturePreview");
             const capturedImageInput = document.getElementById("capturedImage");
 
-            const maxWidth = 800;  // Max width of the captured image
-            const maxHeight = 600; // Max height of the captured image
+            const maxWidth = 480;  // Max width of the captured image
+            const maxHeight = 360; // Max height of the captured image
 
             let width = video.videoWidth;
             let height = video.videoHeight;
+
+            if (!width || !height) {
+                alert("Camera is still loading. Please wait a second and capture again.");
+                return;
+            }
 
             // Calculate new dimensions based on maxWidth and maxHeight
             if (width > maxWidth || height > maxHeight) {
@@ -104,8 +136,8 @@
             // Draw the current video frame on the canvas with new dimensions
             context.drawImage(video, 0, 0, width, height);
 
-            // Convert the resized canvas to an image and display it in preview
-            const imageData = canvas.toDataURL("image/png");
+            // Convert the resized canvas to a compressed JPEG to keep the request size small
+            const imageData = canvas.toDataURL("image/jpeg", 0.7);
             capturedImageInput.value = imageData;
             preview.innerHTML = `<img src="${imageData}" alt="Captured Image">`;
 
@@ -124,27 +156,38 @@
 
         // Reset for retaking the image
         function retakeImage() {
-            document.getElementById("capturePreview").innerHTML = "";
+            document.getElementById("capturePreview").innerHTML = '<span>Click capture to start camera</span>';
             document.getElementById("capturedImage").value = "";
             document.getElementById("retake-btn").style.display = "none";
             stopCamera();  // Stop the camera when retaking
-            startAndCapture();  // Restart the camera
+            cameraInitialized = false;  // Reset camera state
         }
 
         // Show preview of uploaded image
         function showPreview() {
             const file = document.getElementById("fileInput").files[0];
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById("uploadPreview").innerHTML = `<img src="${e.target.result}" alt="Uploaded Image">`;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("uploadPreview").innerHTML = `<img src="${e.target.result}" alt="Uploaded Image">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById("uploadPreview").innerHTML = '<span>Select an image to preview</span>';
             }
-            reader.readAsDataURL(file);
         }
 
         // Validate that a file is selected in the upload form
         function validateUploadForm() {
-            if (!document.getElementById("fileInput").files.length) {
+            const selectedFile = document.getElementById("fileInput").files[0];
+            if (!selectedFile) {
                 alert("Please select a file to upload.");
+                return false;
+            }
+
+            const maxSize = 16 * 1024 * 1024;
+            if (selectedFile.size > maxSize) {
+                alert("File is too large. Please choose an image smaller than 16MB.");
                 return false;
             }
             return true;
@@ -152,8 +195,16 @@
 
         // Validate that an image is captured in the capture form
         function validateCaptureForm() {
-            if (!document.getElementById("capturedImage").value) {
+            const capturedImage = document.getElementById("capturedImage").value;
+            if (!capturedImage) {
                 alert("Please capture an image before submitting.");
+                return false;
+            }
+
+            const approxBytes = Math.ceil((capturedImage.length * 3) / 4);
+            const maxSize = 16 * 1024 * 1024;
+            if (approxBytes > maxSize) {
+                alert("Captured image is too large. Please retake it and try again.");
                 return false;
             }
             return true;
@@ -163,16 +214,21 @@
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('theme') === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.querySelector('.theme-toggle').textContent = "☀️ Light Mode";
+                document.querySelector('.theme-toggle').textContent = "Light Mode";
             }
         });
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             let btn = document.querySelector('.theme-toggle');
-            btn.textContent = document.body.classList.contains('dark-mode') ? "☀️ Light Mode" : "🌙 Dark Mode";
+            btn.textContent = document.body.classList.contains('dark-mode') ? "Light Mode" : "Dark Mode";
             localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
         }
+
+        // Stop camera when page unloads
+        window.addEventListener('beforeunload', () => {
+            stopCamera();
+        });
     </script>
 </body>
 </html>

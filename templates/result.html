@@ -3,41 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result - Emotion Recognition</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23667eea'/><text x='50' y='62' font-size='62' text-anchor='middle' fill='%23ffffff' font-family='Inter, sans-serif'>E</text></svg>">
 </head>
 <body>
-    <div class="header">
-        <h1>Face Recognition System</h1>
-        <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
-    </div>
-    <div class="result-container">
-        <!-- Display the captured image -->
-        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Captured Image">
+    <header class="header">
+        <h1>Emotion Recognition</h1>
+        <div class="header-actions">
+            {% if session.get('user') %}
+            <span class="user-badge">{{ session.get('user_name', session.get('user')) }}</span>
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+            {% endif %}
+            <button class="theme-toggle" onclick="toggleTheme()">
+                Dark Mode
+            </button>
+        </div>
+    </header>
 
-        <h2>Prediction: {{ prediction }}</h2>
+    <div class="result-container">
+        <!-- Display the analyzed image -->
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Analyzed Image">
+
+        <h2>Detected Emotion: {{ prediction }}</h2>
         <p class="confidence">Confidence: {{ confidence }}%</p>
 
-        <!-- Back button to upload page -->
-        <a href="{{ url_for('upload_file') }}" class="button">Go Back</a>
+        <!-- Action buttons -->
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <a href="{{ url_for('upload_file') }}" class="button" style="flex: 1;">Analyze Another</a>
+            <a href="{{ url_for('upload_file') }}" class="button" style="flex: 1; background: var(--secondary-gradient);">Home</a>
+        </div>
     </div>
-    <div class="footer">
-        <p>&copy; 2025 Emotion Recognition</p>
-    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Emotion Recognition System. Built by AI Engineering Team</p>
+    </footer>
 
     <script>
         // Theme toggle functionality
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            let btn = document.querySelector('.theme-toggle');
-            btn.textContent = document.body.classList.contains('dark-mode') ? "☀️ Light Mode" : "🌙 Dark Mode";
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        }
-
-        // Load the stored theme preference on page load
         document.addEventListener('DOMContentLoaded', function () {
             if (localStorage.getItem('theme') === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.querySelector('.theme-toggle').textContent = "☀️ Light Mode";
+                document.querySelector('.theme-toggle').textContent = "Light Mode";
+            }
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            let btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark-mode') ? "Light Mode" : "Dark Mode";
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        // Simple entrance animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultContainer = document.querySelector('.result-container');
+            if (resultContainer) {
+                resultContainer.style.animation = 'fadeInUp 0.8s ease-out';
             }
         });
     </script>
